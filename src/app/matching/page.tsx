@@ -1,12 +1,14 @@
 'use client'
-import { useState } from 'react'
-import { NoMatchingCard } from './_components/NoMatchingCard'
-import { MatchingCard, MatchingLoading } from './_components'
-import { StudyData, userMatchingData } from '@/mocks'
 
-export default function StudyMatchingPage() {
-  const matchedStudies = StudyData.filter((study) => {
-    return userMatchingData.some((userMatch) => {
+import { MatchingCard, MatchingLoading, NoMatchingCard } from './_components'
+import { useStudyQuery, useUserMatchingDataQuery } from './_states'
+
+const StudyMatchingPage = () => {
+  const { data: studyData } = useStudyQuery()
+  const { data: userData } = useUserMatchingDataQuery()
+
+  const matchedStudies = studyData?.filter((study) => {
+    return userData?.some((userMatch) => {
       return (
         study.field === userMatch.field &&
         study.detailField === userMatch.detailField &&
@@ -17,11 +19,10 @@ export default function StudyMatchingPage() {
     })
   })
 
-  console.log(matchedStudies)
-
+  if (!matchedStudies) return
   return (
     <div className={`${matchedStudies.length < 3 ? 'h-[92vh]' : 'h-auto'} bg-primary-50 flex flex-col px-[100px]`}>
-      {!matchedStudies || matchedStudies.length === 0 ? (
+      {!matchedStudies ? (
         <MatchingLoading />
       ) : (
         <div>
@@ -32,9 +33,7 @@ export default function StudyMatchingPage() {
             } bg-white flex flex-row flex-wrap justify-center items-center rounded-[40px] pb-[40px] mb-[40px] gap-x-[120px]`}
           >
             {matchedStudies.length > 0 &&
-              matchedStudies.map((data) => (
-                <MatchingCard key={data.id} id={data.id} label={data.field} title={data.title} content={data.content} />
-              ))}
+              matchedStudies.map((data) => <MatchingCard key={data.id} MatchingStudyData={data} />)}
             {matchedStudies.length % 2 === 1 && <NoMatchingCard />}
           </div>
         </div>
@@ -42,3 +41,5 @@ export default function StudyMatchingPage() {
     </div>
   )
 }
+
+export default StudyMatchingPage

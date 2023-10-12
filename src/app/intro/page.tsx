@@ -9,7 +9,7 @@ import { useRef } from 'react'
 import { useSmoothScroll } from '@/hooks/useSmoothScroll'
 import { useRouter } from 'next/navigation'
 
-export default function IntroPage() {
+const IntroPage = () => {
   const router = useRouter()
 
   const onClickToMain = () => {
@@ -74,3 +74,5 @@ export default function IntroPage() {
     </div>
   )
 }
+
+export default IntroPage

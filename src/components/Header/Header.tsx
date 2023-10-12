@@ -4,19 +4,27 @@ import { usePathname, useRouter } from 'next/navigation'
 import mainLogo from '/public/image/logo-black.png'
 import beanIcon from '/public/image/icon-beans.png'
 import Image from 'next/image'
-import { siteConfig } from '@/constants/main'
-import { IntroHeader } from '../IntroHeader/IntroHeader'
-import { useState } from 'react'
-import LoginModalPage from '../../app/_components/LoginModal/LoginModal'
 import { signOut, useSession } from 'next-auth/react'
 import { StudyData, userMatchingData } from '@/mocks'
+import { useAtom } from 'jotai'
+import { siteConfig } from '@/constants'
+import { isOpenLoginModal } from '@/app/_states'
+import { LoginModalPage } from '@/app/_components'
+import { IntroHeader } from '../IntroHeader/IntroHeader'
 
 export const Header = () => {
   const router = useRouter()
   const pathName = usePathname()
   const isIntroPage = pathName === '/intro'
+  const [isLoginModal, setIsLoginModal] = useAtom(isOpenLoginModal)
+  const { data: session } = useSession()
+
   const onClickToHeaderLink = (href: string) => {
-    router.push(`${href}`)
+    if (session || href === '/') {
+      router.push(`${href}`)
+    } else if (!session) {
+      setIsLoginModal(true)
+    }
   }
 
   const matchedStudies = StudyData.filter((study) => {
@@ -31,16 +39,13 @@ export const Header = () => {
     })
   })
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const { data: session } = useSession()
-
   return (
     <div>
       {isIntroPage ? (
         <IntroHeader />
       ) : (
         <div>
-          {isModalOpen ? <LoginModalPage setIsModalOpen={setIsModalOpen} /> : null}
+          {isLoginModal ? <LoginModalPage setIsModalOpen={setIsLoginModal} /> : null}
           <div className="fixed top-0 w-full h-[auto] flex justify-between pl-10 pr-14 py-2 bg-white relative">
             <div className="flex flex-row gap-1 py-[5px]">
               <div
@@ -71,7 +76,7 @@ export const Header = () => {
                 <div>
                   <div
                     onClick={() => {
-                      setIsModalOpen(true)
+                      setIsLoginModal(true)
                     }}
                     className="flex flex-col justify-center items-center cursor-pointer"
                   >

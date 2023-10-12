@@ -1,8 +1,8 @@
 'use client'
 import { Button } from '@/components'
 import Image from 'next/image'
-import naverLogo from '../../../../../public/image/naver-logo.svg.png'
-import { NaverSignInOutButtonProps } from '..'
+import naverLogo from '/public/image/naver-logo.svg.png'
+import { NaverSignInOutButtonProps } from '.'
 
 export const NaverSignInOutButton = ({ signIn }: NaverSignInOutButtonProps) => {
   const onClickToMain = () => {

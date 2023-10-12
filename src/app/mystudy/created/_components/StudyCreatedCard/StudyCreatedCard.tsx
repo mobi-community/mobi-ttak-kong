@@ -2,20 +2,18 @@
 
 import Image from 'next/image'
 import levelIcon from '/public/image/level-image.png'
-import { StudyDataType } from '@/types'
-import { useState } from 'react'
+import { useAtom } from 'jotai'
+import { StudyCreatedCardProps } from '.'
+import { isStudyClosedToggle } from '../../_states'
 
-export const StudyCreatedCard = ({ field, detailField, ...rest }: StudyDataType) => {
-  // const router = useRouter()
-  const [isClosed, setIsClosed] = useState(rest.isClosed)
+export const StudyCreatedCard = ({ studyData }: StudyCreatedCardProps) => {
+  // const router = useRouter() isStudyClosedToggle
+  const [isClosedToggle, setIsClosedToggle] = useAtom(isStudyClosedToggle)
+
+  const { title, detailField, content, nowMemberCount, minMemberCount, level, field } = studyData
 
   const onClickIsClosedToggle = () => {
-    if (isClosed === true) {
-      setIsClosed(false)
-    }
-    if (isClosed === false) {
-      setIsClosed(true)
-    }
+    setIsClosedToggle((prev) => !prev)
   }
 
   // 스터디 수정페이지 완성되면 연결하기
@@ -30,15 +28,15 @@ export const StudyCreatedCard = ({ field, detailField, ...rest }: StudyDataType)
           <div className=" flex flex-row items-center h-[30px] ">
             <div>
               <div className="text-[14px] flex flex-row items-center">
-                <p className="font-bold">{rest.title}</p>
+                <p className="font-bold">{title}</p>
                 <p className="text-[12px] text-primary-gray200 ml-2 font-semibold">{detailField}</p>
               </div>
             </div>
           </div>
-          <div className="mt-2 text-primary-gray200 text-[13px] w-[240px]">{rest.content}</div>
+          <div className="mt-2 text-primary-gray200 text-[13px] w-[240px]">{content}</div>
           <div className=" flex flex-row justify-start text-[13px] mt-12 font-semibold">
             <p className="">
-              현재 인원 / 최소 인원 ({rest.nowMemberCount} / {rest.minMemberCount})
+              현재 인원 / 최소 인원 ({nowMemberCount} / {minMemberCount})
             </p>
           </div>
         </div>
@@ -49,14 +47,14 @@ export const StudyCreatedCard = ({ field, detailField, ...rest }: StudyDataType)
           </div>
           <div className="bg-white shadow-md rounded-[50%] ml-7 px-2 py-3 flex flex-col justify-center items-center mt-[20px]">
             <Image src={levelIcon} alt="레벨 아이콘" width={50} height={50} />
-            <div>{rest.level}</div>
+            <div>{level}</div>
           </div>
           <div className="ml-7 shadow-md flex justify-center bg-primary-300 px-3 py-1 text-[12px] font-semibold text-white rounded-[20px] mt-4">
             <p>{field}</p>
           </div>
         </div>
       </div>
-      {isClosed ? (
+      {isClosedToggle ? (
         <div
           onClick={onClickIsClosedToggle}
           className="bg-primary-gray200 p-4 w-[10px] mt-[60px] mb-[30px] flex justify-center items-center inline-block text-white font-bold rounded-r-[15px] hover:bg-opacity-70 cursor-pointer transition-all duration-300"

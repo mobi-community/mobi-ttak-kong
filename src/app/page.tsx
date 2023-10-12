@@ -1,7 +1,7 @@
 'use client'
 
 import { mainConstants } from '@/constants'
-import { SelectCard } from './_components/SelectCard/SelectCard'
+import { SelectCard } from './_components'
 
 const MyStudy = () => {
   return (

@@ -1,2 +1,2 @@
 export * from './StudyAppliedCard'
-export type * from './StudyAplliedCardProps'
+export type * from './StudyAppliedCard.type'

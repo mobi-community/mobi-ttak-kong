@@ -1,23 +1,41 @@
 import { Button } from '@/components'
 import Image from 'next/image'
-import { SelectCardProps } from '.'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
+import { useAtom } from 'jotai'
+import { SelectCardProps } from '.'
+import { isOpenLoginModal } from '@/app/_states'
 
 export const SelectCard = ({ mypageInfo }: { mypageInfo: SelectCardProps }) => {
   const isSelectCardLeft = mypageInfo.id === 1
   const router = useRouter()
+  const { data: session } = useSession()
+  const [isLoginModal, setIsLoginModal] = useAtom(isOpenLoginModal)
 
-  const onClickToMatchingPage = () => {
+  const onClickToMatchingPage = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (!session) {
+      return setIsLoginModal(true)
+    }
     router.push('/matching')
   }
 
   const onClickToStudyCreatePage = () => {
+    if (!session) {
+      return setIsLoginModal(true)
+    }
     router.push('/study/create')
   }
 
-  // const onClickToStudyMatchPage = () => {
-  //   router.push('/study/match')
-  // }
+  const onClickToStudyMatchPage = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (!session) {
+      return setIsLoginModal(true)
+    }
+    router.push('/study/create')
+  }
 
   return (
     <div
@@ -30,6 +48,7 @@ export const SelectCard = ({ mypageInfo }: { mypageInfo: SelectCardProps }) => {
         <p className="mt-[5px] text-primary-black font-bold text-[13px]">{mypageInfo.description}</p>
       </div>
       <Button
+        onClick={onClickToStudyMatchPage}
         variant={'secondary'}
         className={`border-[1.5px] border-solid border-primary-gray939 shadow-md text-[12px] text-primary-black my-[15px] w-[235px] h-[44px] ${
           isSelectCardLeft ? '' : 'invisible'

@@ -1,15 +1,17 @@
 'use client'
 
+import { StudyDataType } from '@/types'
+import { StudyMatchingDetailPageProps } from '.'
+import { useStudyQuery, useUserMatchingDataQuery } from '../_states'
 import levelImage from '/public/image/level-image.png'
 import Image from 'next/image'
 
-import { StudyMatchingDetailPageProps } from '.'
-import { StudyDataType } from '@/types'
-import { StudyData, userMatchingData } from '@/mocks'
+const StudyMatchingDetailPage = ({ params }: StudyMatchingDetailPageProps) => {
+  const { data: studyData } = useStudyQuery()
+  const { data: userData } = useUserMatchingDataQuery()
 
-export default function StudyMatchingDetailPage(props: StudyMatchingDetailPageProps) {
-  const matchedStudies = StudyData.filter((study) => {
-    return userMatchingData.some((userMatch) => {
+  const matchedStudies = studyData?.filter((study) => {
+    return userData?.some((userMatch) => {
       return (
         study.field === userMatch.field &&
         study.detailField === userMatch.detailField &&
@@ -20,7 +22,7 @@ export default function StudyMatchingDetailPage(props: StudyMatchingDetailPagePr
     })
   })
 
-  const detailInfo: StudyDataType | undefined = matchedStudies.find((data) => data.id === props.params.postId)
+  const detailInfo: StudyDataType | undefined = matchedStudies?.find((data) => data.id === params.postId)
   const isContentLong = detailInfo && detailInfo.content.length >= 250
 
   return (
@@ -67,3 +69,5 @@ export default function StudyMatchingDetailPage(props: StudyMatchingDetailPagePr
     </div>
   )
 }
+
+export default StudyMatchingDetailPage

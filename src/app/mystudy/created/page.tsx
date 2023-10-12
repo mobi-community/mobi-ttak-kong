@@ -1,27 +1,24 @@
 'use client'
 
-import { StudyCreatedCard } from './_components'
-import { studyCreatedConstants } from '@/constants'
 import { useRouter } from 'next/navigation'
-import { userCreatedStudyData } from '@/mocks'
-import { StudyCreatedEmptyCard } from './_components/StudyCreatedEmptyCard'
+import { studyCreatedConstants } from '@/constants'
+import { StudyCreatedCard, StudyCreatedEmptyCard } from './_components'
+import { useCreatedStudyQuery } from './_states'
 
-export default function StudyCreatedPage() {
-  const studyData = userCreatedStudyData
-
+const StudyCreatedPage = () => {
   const router = useRouter()
+  const { data: studyData } = useCreatedStudyQuery()
 
   const onClickToMyCreatedStudy = () => {
     router.push('/mystudy/applied')
   }
 
+  if (!studyData) return
   return (
     <div
-      className={
-        studyData.length >= 3
-          ? 'h-auto flex justify-center items-center pt-[70px] bg-primary-50'
-          : 'h-[92vh] flex justify-center items-center bg-primary-50'
-      }
+      className={`flex justify-center items-center bg-primary-50 ${
+        studyData.length >= 3 ? 'h-auto pt-[70px]' : 'h-[92vh]'
+      }`}
     >
       <div
         className="
@@ -44,20 +41,7 @@ export default function StudyCreatedPage() {
           />
           <div className="flex flex-row flex-wrap justify-center items-center pb-[30px] y-10 mb-[40px] gap-x-[40px]">
             {studyData.map((data) => (
-              <StudyCreatedCard
-                key={data.id}
-                id={data.id}
-                field={data.field}
-                detailField={data.detailField}
-                title={data.title}
-                content={data.content}
-                minMemberCount={data.minMemberCount}
-                nowMemberCount={data.nowMemberCount}
-                level={data.level}
-                isInPerson={data.isInPerson}
-                location={data.location}
-                isClosed={data.isClosed}
-              />
+              <StudyCreatedCard key={data.id} studyData={data} />
             ))}
             {studyData.length === 0 || (studyData.length % 2 === 1 && <StudyCreatedEmptyCard />)}
           </div>
@@ -66,3 +50,5 @@ export default function StudyCreatedPage() {
     </div>
   )
 }
+
+export default StudyCreatedPage

@@ -1,2 +1,2 @@
-export * from './StudyAppliedCard/StudyAppliedCard'
-export type * from './StudyAppliedCard/StudyAplliedCardProps'
+export * from './StudyAppliedCard'
+export * from './StudyAppliedEmptyDataCard'

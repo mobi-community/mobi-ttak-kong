@@ -5,7 +5,7 @@ import beanIcon from '/public/image/icon-beans.png'
 import Image from 'next/image'
 import { useSession } from 'next-auth/react'
 import { useState } from 'react'
-import LoginModalPage from '@/app/_components/LoginModal/LoginModal'
+import { LoginModalPage } from '@/app/_components'
 
 export const IntroHeader = () => {
   const { data: session } = useSession()
